@@ -9,7 +9,10 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/views/*": ["views/*"],
-      "@/layouts/*": ["layouts/*"]
+      "@/layouts/*": ["layouts/*"],
+      "@/services/*": ["services/*"],
+      "@/types/*": ["types/*"],
+      "@/lib/*": ["lib/*"]
     },
 
     /* Bundler mode */
