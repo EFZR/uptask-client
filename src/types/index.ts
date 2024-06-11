@@ -13,7 +13,16 @@ export const taskSchema = z.object({
   _id: z.string(),
   taskName: z.string(),
   description: z.string(),
+  project: z.string(),
   status: taskStatusSchema,
+});
+
+export const taskProjectSchema = taskSchema.pick({
+  _id: true,
+  taskName: true,
+  description: true,
+  project: true,
+  status: true,
 });
 
 export type Task = z.infer<typeof taskSchema>;
@@ -26,6 +35,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  tasks: z.array(taskProjectSchema),
 });
 
 export const dashboardProjectSchema = z.array(
@@ -40,5 +50,5 @@ export const dashboardProjectSchema = z.array(
 export type Project = z.infer<typeof projectSchema>;
 export type ProjectFormData = Pick<
   Project,
-  "clientName" | "projectName" | "description"
+  "clientName" | "projectName" | "description" | "tasks"
 >;

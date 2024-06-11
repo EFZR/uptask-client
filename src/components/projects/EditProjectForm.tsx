@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 import type { ProjectFormData } from "types";
-import { updataProject } from "@/services/Projects";
+import { updateProject } from "@/services/Projects";
 import { toast } from "react-toastify";
 
 type ProjectFormProps = {
@@ -15,6 +15,7 @@ export default function EditProjectForm({ data }: ProjectFormProps) {
     projectName: data.projectName,
     clientName: data.clientName,
     description: data.description,
+    tasks: data.tasks,
   };
 
   const {
@@ -31,7 +32,7 @@ export default function EditProjectForm({ data }: ProjectFormProps) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: updataProject,
+    mutationFn: updateProject,
 
     onError: (error) => {
       toast.error(error.message);

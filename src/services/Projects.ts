@@ -35,6 +35,7 @@ export async function getProjects() {
 export async function getProjectById(id: Project["_id"]) {
   try {
     const { data } = await api.get(`projects/${id}`);
+
     const response = projectSchema.safeParse(data);
     if (response.success) {
       return response.data;
@@ -46,7 +47,7 @@ export async function getProjectById(id: Project["_id"]) {
   }
 }
 
-export async function updataProject(project: Project) {
+export async function updateProject(project: Project) {
   try {
     const { data } = await api.put<string>(`projects/${project._id}`, project);
     return data;

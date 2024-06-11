@@ -13,7 +13,6 @@ export default function EditProjectView() {
     retry: false,
   });
 
-
   if (isLoading) return "Cargando...";
 
   if (isError) return <Navigate to="/404" />;

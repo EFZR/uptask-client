@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogPanel,
@@ -29,6 +29,7 @@ export default function AddTaskModal() {
   const params = useParams();
   const projectId = params.projectId!;
 
+  /** Form Params */
   const initialValues: TaskFormData = {
     taskName: "",
     description: "",
@@ -40,9 +41,12 @@ export default function AddTaskModal() {
     reset,
   } = useForm<TaskFormData>({ defaultValues: initialValues });
 
+  /** Manipulation of queries */
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: createTask,
     onSuccess: (data) => {
+      queryClient.invalidateQueries({queryKey: ["editProject"]})
       toast.success(data);
       reset();
       navigate(location.pathname, { replace: true });
