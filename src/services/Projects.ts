@@ -3,7 +3,7 @@ import {
   dashboardProjectSchema,
   Project,
   ProjectFormData,
-  projectScheme,
+  projectSchema,
 } from "@/types/index";
 import { isAxiosError } from "axios";
 
@@ -35,7 +35,7 @@ export async function getProjects() {
 export async function getProjectById(id: Project["_id"]) {
   try {
     const { data } = await api.get(`projects/${id}`);
-    const response = projectScheme.safeParse(data);
+    const response = projectSchema.safeParse(data);
     if (response.success) {
       return response.data;
     }
