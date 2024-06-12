@@ -13,6 +13,7 @@ export default function CreateProjectView() {
     projectName: "",
     clientName: "",
     description: "",
+    tasks: []
   };
 
   const {
