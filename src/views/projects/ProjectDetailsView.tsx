@@ -4,6 +4,7 @@ import { getProjectById } from "@/services/Projects";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
 import TaskList from "@/components/tasks/TaskList";
 import EditTaskData from "@/components/tasks/EditTaskData";
+import TaskModalDetails from "@/components/tasks/TaskModalDetail";
 
 export default function ProjectDetailsView() {
   const params = useParams();
@@ -39,6 +40,7 @@ export default function ProjectDetailsView() {
         <TaskList tasks={data.tasks} />
         <AddTaskModal />
         <EditTaskData />
+        <TaskModalDetails />
       </>
     );
 }

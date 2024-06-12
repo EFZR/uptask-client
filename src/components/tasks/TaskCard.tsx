@@ -30,7 +30,9 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["task"] });
-      queryClient.invalidateQueries({ queryKey: ["currentProject", projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["currentProject", projectId],
+      });
       toast.success(data);
     },
 
@@ -71,6 +73,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 <button
                   type="button"
                   className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                  onClick={() => navigate(`?viewTask=${task._id}`)}
                 >
                   Ver Tarea
                 </button>

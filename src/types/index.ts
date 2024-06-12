@@ -15,6 +15,8 @@ export const taskSchema = z.object({
   description: z.string(),
   project: z.string(),
   status: taskStatusSchema,
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const taskProjectSchema = taskSchema.pick({
@@ -35,7 +37,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
-  tasks: z.array(taskProjectSchema),
+  tasks: z.array(taskSchema),
 });
 
 export const dashboardProjectSchema = z.array(
