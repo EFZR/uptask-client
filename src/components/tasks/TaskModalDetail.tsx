@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogPanel,
@@ -13,9 +13,11 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { getTaskById } from "@/services/Tasks";
 import { toast } from "react-toastify";
+import { statusTranslations } from "@/locales/es";
+import { getTaskById, updateStatus } from "@/services/Tasks";
 import { formatDate } from "@/utils/utils";
+import { TaskStatus } from "@/types/index";
 
 export default function TaskModalDetails() {
   //#region states
@@ -40,6 +42,22 @@ export default function TaskModalDetails() {
     retry: false,
   });
 
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: updateStatus,
+
+    onSuccess: (data) => {
+      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      queryClient.invalidateQueries({ queryKey: ["currentProject", projectId] });
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   /** Manipulacion de errores */
   const [errorTask, setErrorTask] = useState(false);
   useEffect(() => {
@@ -51,6 +69,16 @@ export default function TaskModalDetails() {
     }
     errorNavigate();
   }, [isError]);
+
+  //#endregion
+
+  //#region Functions
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const status = e.target.value as TaskStatus;
+    const data = { projectId, taskId, status };
+    mutate(data);
+  };
 
   //#endregion
 
@@ -106,8 +134,24 @@ export default function TaskModalDetails() {
                     </p>
                     <div className="my-5 space-y-3">
                       <label className="font-bold">
-                        Estado Actual: {data.status}
+                        Estado Actual: {statusTranslations[data.status]}
                       </label>
+
+                      <select
+                        name=""
+                        id=""
+                        className="w-full p-3 bg-white border border-gray-300"
+                        defaultValue={data.status}
+                        onChange={handleChange}
+                      >
+                        {Object.entries(statusTranslations).map(
+                          ([key, value]) => (
+                            <option key={key} value={key}>
+                              {value}
+                            </option>
+                          )
+                        )}
+                      </select>
                     </div>
                   </DialogPanel>
                 </TransitionChild>
