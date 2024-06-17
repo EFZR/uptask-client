@@ -42,6 +42,8 @@ export default function TaskModalDetails() {
     retry: false,
   });
 
+  /** Actualización del estado de la tarea */
+
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -50,7 +52,9 @@ export default function TaskModalDetails() {
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["task", taskId] });
-      queryClient.invalidateQueries({ queryKey: ["currentProject", projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["currentProject", projectId],
+      });
     },
 
     onError: (error) => {
@@ -60,6 +64,7 @@ export default function TaskModalDetails() {
 
   /** Manipulacion de errores */
   const [errorTask, setErrorTask] = useState(false);
+
   useEffect(() => {
     function errorNavigate() {
       if (isError) {
