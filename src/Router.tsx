@@ -4,16 +4,31 @@ import DashboardView from "@/views/DashboardView";
 import CreateProjectView from "./views/projects/CreateProjectView";
 import EditProjectView from "./views/projects/EditProjectView";
 import ProjectDetailsView from "./views/projects/ProjectDetailsView";
+import AuthLayout from "./layouts/AuthLayout";
+import LoginView from "./views/auth/LoginView";
+import RegisterView from "./views/auth/RegisterView";
+import ConfirmAccount from "./views/auth/ConfirmAccount";
+import RequestNewCode from "./views/auth/RequestNewCodeView";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<AppLayout />} >
+        <Route element={<AppLayout />}>
           <Route path="/" element={<DashboardView />} index />
           <Route path="/projects/create" element={<CreateProjectView />} />
           <Route path="/projects/:projectId" element={<ProjectDetailsView />} />
-          <Route path="/projects/:projectId/edit" element={<EditProjectView />} />
+          <Route
+            path="/projects/:projectId/edit"
+            element={<EditProjectView />}
+          />
+        </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="/auth/login" element={<LoginView />} />
+          <Route path="/auth/register" element={<RegisterView />} />
+          <Route path="/auth/confirm-account" element={<ConfirmAccount />} />
+          <Route path="/auth/request-code" element={<RequestNewCode />} />
         </Route>
       </Routes>
     </BrowserRouter>
