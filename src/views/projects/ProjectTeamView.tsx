@@ -1,81 +1,88 @@
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   Menu,
-  Transition,
   MenuButton,
   MenuItem,
   MenuItems,
+  Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { deleteProject, getProjects } from "@/services/Projects";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getProjectTeam, removeUserFromProject } from "@/services/Team";
 import { toast } from "react-toastify";
+import AddMemberModal from "@/components/team/AddMemberModal";
 
-export default function DashboardView() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["projects"],
-    queryFn: getProjects,
-    retry: 1,
+export default function ProjectTeamView() {
+  const navigate = useNavigate();
+  const params = useParams();
+  const projectId = params.projectId!;
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["projectTeam", projectId],
+    queryFn: () => getProjectTeam({ projectId }),
+    retry: false,
   });
 
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: deleteProject,
+    mutationFn: removeUserFromProject,
+
+    onSuccess: (data) => {
+      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ["projectTeam", projectId] });
+    },
 
     onError: (error) => {
       toast.error(error.message);
     },
-
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success(data);
-    },
   });
 
-  if (isLoading) return "Cargando...";
+  if (isLoading) "Cargando...";
+
+  if (isError) return <Navigate to="/404" />;
 
   if (data)
     return (
       <>
-        <h1 className="text-5xl font-black">Mis Proyectos</h1>
+        <h1 className="text-5xl font-black">Administrar Equipo</h1>
         <p className="text-2xl font-light text-gray-500 mt-5">
-          Maneja y administra tus proyectos
+          Administra el equipo de trabajo para este proyecto
         </p>
-
-        <nav className="my-5">
-          <Link
-            to="/projects/create"
+        <nav className="my-5 flex gap-3">
+          <button
+            type="button"
             className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+            onClick={() => navigate("?addMember=true")}
           >
-            Nuevo Projecto
+            Agregar Colaborador
+          </button>
+          <Link
+            to={`/projects/${projectId}`}
+            className="bg-purple-600 hover:bg-purple-700 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+          >
+            Volver a Proyeto
           </Link>
         </nav>
-        {data.length > 0 ? (
+
+        <h2 className="text-5xl font-black my-10">Miembros actuales</h2>
+        {data.length ? (
           <ul
             role="list"
             className="divide-y divide-gray-100 border border-gray-100 mt-10 bg-white shadow-lg"
           >
-            {data.map((project) => (
+            {data?.map((member) => (
               <li
-                key={project._id}
                 className="flex justify-between gap-x-6 px-5 py-10"
+                key={member._id}
               >
                 <div className="flex min-w-0 gap-x-4">
                   <div className="min-w-0 flex-auto space-y-2">
-                    <Link
-                      to={`/projects/${project._id}`}
-                      className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
-                    >
-                      {project.projectName}
-                    </Link>
-                    <p className="text-sm text-gray-400">
-                      Cliente: {project.clientName}
+                    <p className="text-2xl font-black text-gray-600">
+                      {member.name}
                     </p>
-                    <p className="text-sm text-gray-400">
-                      {project.description}
-                    </p>
+                    <p className="text-sm text-gray-400">{member.email}</p>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-x-6">
@@ -98,28 +105,14 @@ export default function DashboardView() {
                     >
                       <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                         <MenuItem>
-                          <Link
-                            to={`/projects/${project._id}`}
-                            className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                          >
-                            Ver Proyecto
-                          </Link>
-                        </MenuItem>
-                        <MenuItem>
-                          <Link
-                            to={`/projects/${project._id}/edit`}
-                            className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                          >
-                            Editar Proyecto
-                          </Link>
-                        </MenuItem>
-                        <MenuItem>
                           <button
                             type="button"
                             className="block px-3 py-1 text-sm leading-6 text-red-500"
-                            onClick={() => mutate(project._id)}
+                            onClick={() =>
+                              mutate({ projectId, userId: member._id })
+                            }
                           >
-                            Eliminar Proyecto
+                            Eliminar del Proyecto
                           </button>
                         </MenuItem>
                       </MenuItems>
@@ -130,13 +123,10 @@ export default function DashboardView() {
             ))}
           </ul>
         ) : (
-          <p className="text-center py-20">
-            No hay projectos aún {""}
-            <Link to="/projects/create" className="text-fuchsia-500 font-bold">
-              Crear Proyecto
-            </Link>
-          </p>
+          <p className="text-center py-20">No hay miembros en este equipo</p>
         )}
+
+        <AddMemberModal />
       </>
     );
 }
