@@ -32,6 +32,7 @@ export async function getTaskById({
     const url = `/projects/${projectId}/tasks/${taskId}`;
     const { data } = await api.get(url);
     const response = taskSchema.safeParse(data);
+
     if (response.success) {
       return response.data;
     }
@@ -65,7 +66,7 @@ export async function updateStatus({
 }: Pick<TaskAPI, "projectId" | "taskId" | "status">) {
   try {
     const url = `/projects/${projectId}/tasks/${taskId}/status`;
-    const { data } = await api.patch<string>(url, {status});
+    const { data } = await api.patch<string>(url, { status });
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

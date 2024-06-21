@@ -1,14 +1,14 @@
-import { Task } from "@/types/index";
+import { TaskProject } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
 
 type TaskListProps = {
-  tasks: Task[];
+  tasks: TaskProject[];
   isManager: boolean
 };
 
 type GroupedTasks = {
-  [key: string]: Task[];
+  [key: string]: TaskProject[];
 };
 
 const initialStatusGroups: GroupedTasks = {

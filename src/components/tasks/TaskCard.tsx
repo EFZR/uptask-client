@@ -9,12 +9,12 @@ import {
   MenuItem,
   Transition,
 } from "@headlessui/react";
-import { Task } from "@/types/index";
+import { TaskProject } from "@/types/index";
 import { deleteTask } from "@/services/Tasks";
 import { toast } from "react-toastify";
 
 type TaskCardProps = {
-  task: Task;
+  task: TaskProject;
   isManager: boolean;
 };
 
