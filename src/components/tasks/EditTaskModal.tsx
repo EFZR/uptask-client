@@ -56,7 +56,7 @@ export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
     },
 
     onError: (error) => {
-      toast.success(error.message);
+      toast.error(error.message);
     },
   });
 

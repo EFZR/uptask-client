@@ -5,7 +5,7 @@ export function useAuth() {
   const { data, isError, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
-    retry: 1,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 

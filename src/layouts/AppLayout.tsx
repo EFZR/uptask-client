@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 export default function AppLayout() {
   const { data, isError, isLoading } = useAuth();
 
+  // TODO: Find a way to make the isError, change its state after the client is logout.
+
   if (isLoading) return "Cargando...";
 
   if (isError) return <Navigate to={"/auth/login"} />;
@@ -23,9 +25,7 @@ export default function AppLayout() {
               </Link>
             </div>
 
-            <NavMenu
-              name={data.name}
-            />
+            <NavMenu name={data.name} />
           </div>
         </header>
 

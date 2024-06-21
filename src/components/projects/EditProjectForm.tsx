@@ -16,6 +16,7 @@ export default function EditProjectForm({ data }: ProjectFormProps) {
     clientName: data.clientName,
     description: data.description,
     tasks: data.tasks,
+    manager: data.manager,
   };
 
   const {
@@ -25,6 +26,7 @@ export default function EditProjectForm({ data }: ProjectFormProps) {
   } = useForm<ProjectFormData>({ defaultValues: initialValues });
 
   const params = useParams();
+
   const projectId = params.projectId!;
 
   const navigate = useNavigate();
