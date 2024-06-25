@@ -15,8 +15,6 @@ export default function EditProjectForm({ data }: ProjectFormProps) {
     projectName: data.projectName,
     clientName: data.clientName,
     description: data.description,
-    tasks: data.tasks,
-    manager: data.manager,
   };
 
   const {

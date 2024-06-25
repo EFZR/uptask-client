@@ -1,6 +1,8 @@
 import api from "@/lib/axios";
 import {
   dashboardProjectSchema,
+  EditProject,
+  editProjectSchema,
   Project,
   ProjectFormData,
   projectSchema,
@@ -36,7 +38,8 @@ export async function getProjectById(id: Project["_id"]) {
   try {
     const { data } = await api.get(`projects/${id}`);
 
-    const response = projectSchema.safeParse(data);
+    const response = editProjectSchema.safeParse(data);
+
     if (response.success) {
       return response.data;
     }
@@ -47,7 +50,23 @@ export async function getProjectById(id: Project["_id"]) {
   }
 }
 
-export async function updateProject(project: Project) {
+export async function getProjectByWithTask(id: Project["_id"]) {
+  try {
+    const { data } = await api.get(`projects/${id}`);
+
+    const response = projectSchema.safeParse(data);
+
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function updateProject(project: EditProject) {
   try {
     const { data } = await api.put<string>(`projects/${project._id}`, project);
     return data;

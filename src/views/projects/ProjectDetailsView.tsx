@@ -1,6 +1,6 @@
 import { Navigate, useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getProjectById } from "@/services/Projects";
+import { getProjectByWithTask } from "@/services/Projects";
 import { useAuth } from "@/hooks/useAuth";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
 import TaskList from "@/components/tasks/TaskList";
@@ -17,7 +17,7 @@ export default function ProjectDetailsView() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["currentProject", projectId],
-    queryFn: () => getProjectById(projectId),
+    queryFn: () => getProjectByWithTask(projectId),
     retry: false,
   });
 
