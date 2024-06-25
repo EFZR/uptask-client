@@ -45,6 +45,7 @@ const noteScheme = z.object({
   content: z.string(),
   createdBy: userScheme,
   task: z.string(),
+  createdAt: z.string(),
 });
 
 export type Note = z.infer<typeof noteScheme>;
@@ -73,6 +74,7 @@ export const taskSchema = z.object({
       status: taskStatusSchema,
     })
   ),
+  notes: z.array(noteScheme),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
