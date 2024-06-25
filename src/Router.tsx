@@ -1,10 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
+
+/** Project & Profile routes */
 import DashboardView from "@/views/DashboardView";
 import CreateProjectView from "./views/projects/CreateProjectView";
 import EditProjectView from "./views/projects/EditProjectView";
 import ProjectDetailsView from "./views/projects/ProjectDetailsView";
 import ProjectTeamView from "./views/projects/ProjectTeamView";
+import ProfileView from "./views/profile/ProfileView";
+import ChangePasswordView from "./views/profile/ChangePasswordView";
+
+/** Authentication Routes */
 import AuthLayout from "./layouts/AuthLayout";
 import LoginView from "./views/auth/LoginView";
 import RegisterView from "./views/auth/RegisterView";
@@ -12,6 +18,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCode from "./views/auth/RequestNewCodeView";
 import ForgotPasswordView from "./views/auth/ForgotPasswordView";
 import NewPasswordView from "./views/auth/NewPasswordView";
+import ProfileLayout from "./layouts/ProfileLayout";
 
 export default function Router() {
   return (
@@ -21,14 +28,12 @@ export default function Router() {
           <Route path="/" element={<DashboardView />} index />
           <Route path="/projects/create" element={<CreateProjectView />} />
           <Route path="/projects/:projectId" element={<ProjectDetailsView />} />
-          <Route
-            path="/projects/:projectId/edit"
-            element={<EditProjectView />}
-          />
-          <Route
-            path="/projects/:projectId/team"
-            element={<ProjectTeamView />}
-          />
+          <Route path="/projects/:projectId/edit" element={<EditProjectView />} />
+          <Route path="/projects/:projectId/team" element={<ProjectTeamView />} />
+          <Route element={<ProfileLayout />}>
+            <Route path="/profile" element={<ProfileView />} />
+            <Route path="/profile/password" element={<ChangePasswordView />} />
+          </Route>
         </Route>
 
         <Route element={<AuthLayout />}>
